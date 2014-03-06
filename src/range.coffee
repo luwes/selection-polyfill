@@ -12,6 +12,7 @@ class Range
 		# if range text length > 0 try to stay in start
 		# element when the cursor is right on a boundary
 		flag = if @range.text.length > 0 then 0 else 1
+
 		temp.setEndPoint('EndToStart', @range)
 		startToStart = @stripLineBreaks(temp.text)
 		result = @findNodeByPos(parent, startToStart.length, flag)
@@ -23,6 +24,9 @@ class Range
 		result = @findNodeByPos(parent, startToEnd.length, 1)
 		@endContainer = result.el
 		@endOffset = result.offset
+
+	select: ->
+		@range.select()
 
 	stripLineBreaks: (str) ->
 		str.replace(/\r\n/g, '')
@@ -41,3 +45,20 @@ class Range
 				else
 					fn(node, pos, end, obj)
 		return obj
+
+	getText: (el) ->
+		el.innerText || el.nodeValue
+
+	setStart: (node, offset) ->
+		if @getText(node).length >= offset && offset >= 0
+			temp = document.body.createTextRange()
+			temp.moveToElementText(node)
+			temp.moveStart('character', offset)
+			@range.setEndPoint('StartToStart', temp)
+
+	setEnd: (node, offset) ->
+		if @getText(node).length >= offset && offset >= 0
+			temp = document.body.createTextRange()
+			temp.moveToElementText(node)
+			temp.moveStart('character', offset)
+			@range.setEndPoint('StartToStart', temp)

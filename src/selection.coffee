@@ -1,10 +1,24 @@
 
 class Selection
 	constructor: ->
-		@rangeCount = 1
 		@selection = document.selection
-		@range = new Range(@selection)
+		@ranges = [new Range(@selection)]
+		@init()
 
-	getRangeAt: ->
-		@range
+	init: ->
+		@rangeCount = @ranges.length
+		@anchorNode = @range?.startContainer
+		@anchorOffset = @range?.startOffset
 
+	getRangeAt: (index) ->
+		@ranges[index]
+
+	removeAllRanges: ->
+		@ranges = []
+		@init()
+
+	addRange: (r) ->
+		@ranges.push(r)
+		for range in @ranges
+			range.select()
+			

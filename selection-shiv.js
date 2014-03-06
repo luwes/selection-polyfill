@@ -34,6 +34,10 @@ Range = (function() {
     this.endOffset = result.offset;
   }
 
+  Range.prototype.select = function() {
+    return this.range.select();
+  };
+
   Range.prototype.stripLineBreaks = function(str) {
     return str.replace(/\r\n/g, '');
   };
@@ -73,6 +77,30 @@ Range = (function() {
     return obj;
   };
 
+  Range.prototype.getText = function(el) {
+    return el.innerText || el.nodeValue;
+  };
+
+  Range.prototype.setStart = function(node, offset) {
+    var temp;
+    if (this.getText(node).length >= offset && offset >= 0) {
+      temp = document.body.createTextRange();
+      temp.moveToElementText(node);
+      temp.moveStart('character', offset);
+      return this.range.setEndPoint('StartToStart', temp);
+    }
+  };
+
+  Range.prototype.setEnd = function(node, offset) {
+    var temp;
+    if (this.getText(node).length >= offset && offset >= 0) {
+      temp = document.body.createTextRange();
+      temp.moveToElementText(node);
+      temp.moveStart('character', offset);
+      return this.range.setEndPoint('StartToStart', temp);
+    }
+  };
+
   return Range;
 
 })();
@@ -81,13 +109,37 @@ var Selection;
 
 Selection = (function() {
   function Selection() {
-    this.rangeCount = 1;
     this.selection = document.selection;
-    this.range = new Range(this.selection);
+    this.ranges = [new Range(this.selection)];
+    this.init();
   }
 
-  Selection.prototype.getRangeAt = function() {
-    return this.range;
+  Selection.prototype.init = function() {
+    var _ref, _ref1;
+    this.rangeCount = this.ranges.length;
+    this.anchorNode = (_ref = this.range) != null ? _ref.startContainer : void 0;
+    return this.anchorOffset = (_ref1 = this.range) != null ? _ref1.startOffset : void 0;
+  };
+
+  Selection.prototype.getRangeAt = function(index) {
+    return this.ranges[index];
+  };
+
+  Selection.prototype.removeAllRanges = function() {
+    this.ranges = [];
+    return this.init();
+  };
+
+  Selection.prototype.addRange = function(r) {
+    var range, _i, _len, _ref, _results;
+    this.ranges.push(r);
+    _ref = this.ranges;
+    _results = [];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      range = _ref[_i];
+      _results.push(range.select());
+    }
+    return _results;
   };
 
   return Selection;
