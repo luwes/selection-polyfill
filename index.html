@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Selection shiv</title>
+	</head>
+	<body>
+
+		<div id="text" contenteditable="true">
+			Select <b>Bold</b>
+			<p>Para <b>Strong</b></p>
+			<p>Para <b>Strong</b></p>
+		</div>
+		<br/>
+		<div id="output"></div>
+
+		<script src="selection-shiv.js"></script>
+		<script src="http://code.jquery.com/jquery.min.js"></script>
+		<script>
+		$(function() {
+			$(document).on('mouseup', function() {
+				var selection = window.getSelection();
+				if (selection.rangeCount > 0) {
+					var range = selection.getRangeAt(0),
+					ancestor = range.commonAncestorContainer,
+					output = [
+						'<br/>rangeCount: ',
+						selection.rangeCount,
+						'<br/>anchorOffset',
+						selection.anchorOffset,
+
+						'<br/>commonAncestorContainer: ',
+						ancestor.tagType == 3 ? 'TEXT' : ancestor.tagName,
+
+						'<br/>startContainer: ',
+						range.startContainer.data,
+						'<br/>startOffset: ',
+						range.startOffset,
+
+						'<br/>endContainer: ',
+						range.endContainer.data,
+						'<br/>endOffset: ',
+						range.endOffset
+					];
+					$('#output').html(output.join(' '));
+				}
+			});
+		});
+		</script>
+	</body>
+</html>
