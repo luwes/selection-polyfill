@@ -85,8 +85,10 @@ Range = (function() {
     var temp;
     if (this.getText(node).length >= offset && offset >= 0) {
       temp = document.body.createTextRange();
-      temp.moveToElementText(node);
-      temp.moveStart('character', offset);
+      if (node.nodeType === 3) {
+        temp.moveToElementText(node.parentNode);
+        temp.moveStart('character', offset);
+      }
       return this.range.setEndPoint('StartToStart', temp);
     }
   };
@@ -95,9 +97,11 @@ Range = (function() {
     var temp;
     if (this.getText(node).length >= offset && offset >= 0) {
       temp = document.body.createTextRange();
-      temp.moveToElementText(node);
-      temp.moveStart('character', offset);
-      return this.range.setEndPoint('StartToStart', temp);
+      if (node.nodeType === 3) {
+        temp.moveToElementText(node.parentNode);
+        temp.moveStart('character', offset);
+      }
+      return this.range.setEndPoint('EndToStart', temp);
     }
   };
 
@@ -117,8 +121,8 @@ Selection = (function() {
   Selection.prototype.init = function() {
     var _ref, _ref1;
     this.rangeCount = this.ranges.length;
-    this.anchorNode = (_ref = this.range) != null ? _ref.startContainer : void 0;
-    return this.anchorOffset = (_ref1 = this.range) != null ? _ref1.startOffset : void 0;
+    this.anchorNode = (_ref = this.ranges[0]) != null ? _ref.startContainer : void 0;
+    return this.anchorOffset = (_ref1 = this.ranges[0]) != null ? _ref1.startOffset : void 0;
   };
 
   Selection.prototype.getRangeAt = function(index) {

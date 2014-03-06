@@ -24,6 +24,18 @@
 		<script src="http://code.jquery.com/jquery.min.js"></script>
 		<script>
 		$(function() {
+
+			$('#text').on('mouseup', function() {
+				var selection = window.getSelection();
+				if (selection.rangeCount > 0) {
+					var range = selection.getRangeAt(0);
+					range.setStart($('#start')[0].childNodes[0], 1);
+					range.setEnd($('#end')[0].childNodes[0], 3);
+					selection.removeAllRanges();
+					selection.addRange(range);
+				}
+			});
+
 			$(document).on('mouseup', function() {
 				var selection = window.getSelection();
 				if (selection.rangeCount > 0) {
@@ -32,7 +44,7 @@
 					output = [
 						'<br/>rangeCount: ',
 						selection.rangeCount,
-						'<br/>anchorOffset',
+						'<br/>anchorOffset: ',
 						selection.anchorOffset,
 
 						'<br/>commonAncestorContainer: ',
@@ -52,15 +64,6 @@
 				}
 			});
 
-			$('#text').on('mouseup', function() {
-				var selection = window.getSelection();
-				if (selection.rangeCount > 0) {
-					var range = selection.getRangeAt(0);
-					range.setStart($('#start')[0], 0);
-					selection.removeAllRanges();
-					selection.addRange(range);
-				}
-			});
 		});
 		</script>
 	</body>

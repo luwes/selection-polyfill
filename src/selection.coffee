@@ -7,8 +7,8 @@ class Selection
 
 	init: ->
 		@rangeCount = @ranges.length
-		@anchorNode = @range?.startContainer
-		@anchorOffset = @range?.startOffset
+		@anchorNode = @ranges[0]?.startContainer
+		@anchorOffset = @ranges[0]?.startOffset
 
 	getRangeAt: (index) ->
 		@ranges[index]
@@ -21,4 +21,3 @@ class Selection
 		@ranges.push(r)
 		for range in @ranges
 			range.select()
-			

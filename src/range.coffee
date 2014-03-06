@@ -52,13 +52,15 @@ class Range
 	setStart: (node, offset) ->
 		if @getText(node).length >= offset && offset >= 0
 			temp = document.body.createTextRange()
-			temp.moveToElementText(node)
-			temp.moveStart('character', offset)
+			if node.nodeType == 3
+				temp.moveToElementText(node.parentNode)
+				temp.moveStart('character', offset)
 			@range.setEndPoint('StartToStart', temp)
 
 	setEnd: (node, offset) ->
 		if @getText(node).length >= offset && offset >= 0
 			temp = document.body.createTextRange()
-			temp.moveToElementText(node)
-			temp.moveStart('character', offset)
-			@range.setEndPoint('StartToStart', temp)
+			if node.nodeType == 3
+				temp.moveToElementText(node.parentNode)
+				temp.moveStart('character', offset)
+			@range.setEndPoint('EndToStart', temp)
