@@ -14,7 +14,7 @@ var Range;
 
 Range = (function() {
   function Range(selection) {
-    var flag, parent, result, temp;
+    var flag, parent, result, startToEnd, startToStart, temp;
     this.selection = selection;
     this.range = this.selection.createRange();
     parent = this.range.parentElement();
@@ -23,14 +23,20 @@ Range = (function() {
     temp.moveToElementText(parent);
     flag = this.range.text.length > 0 ? 0 : 1;
     temp.setEndPoint('EndToStart', this.range);
-    result = this.findNodeByPos(parent, temp.text.length, flag);
+    startToStart = this.stripLineBreaks(temp.text);
+    result = this.findNodeByPos(parent, startToStart.length, flag);
     this.startContainer = result.el;
     this.startOffset = result.offset;
     temp.setEndPoint('EndToEnd', this.range);
-    result = this.findNodeByPos(parent, temp.text.length, 1);
+    startToEnd = this.stripLineBreaks(temp.text);
+    result = this.findNodeByPos(parent, startToEnd.length, 1);
     this.endContainer = result.el;
     this.endOffset = result.offset;
   }
+
+  Range.prototype.stripLineBreaks = function(str) {
+    return str.replace(/\r\n/g, '');
+  };
 
   Range.prototype.findNodeByPos = function(parent, pos, end) {
     var fn, obj;
@@ -48,15 +54,18 @@ Range = (function() {
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         node = _ref[_i];
-        if (node.nodeType === 3) {
-          if (obj.length + node.nodeValue.length + end > pos) {
-            obj.el = node;
-            obj.offset = pos - obj.length;
-            break;
+        if (!obj.found) {
+          if (node.nodeType === 3) {
+            if (obj.length + node.length + end > pos) {
+              obj.found = true;
+              obj.el = node;
+              obj.offset = pos - obj.length;
+              break;
+            }
+            _results.push(obj.length += node.length);
+          } else {
+            _results.push(fn(node, pos, end, obj));
           }
-          _results.push(obj.length += node.nodeValue.length);
-        } else {
-          _results.push(fn(node, pos, end, obj));
         }
       }
       return _results;
