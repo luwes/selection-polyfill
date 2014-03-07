@@ -1,10 +1,20 @@
 
 class Range
-	constructor: (@selection) ->
-		@range = @selection.createRange()
+	@history: []
 
+	constructor: (isSelection) ->
+		if isSelection
+			@range = document.selection.createRange()
+		else
+			@range = document.body.createTextRange()
+			@collapse(true)
+
+		@init()
+
+	init: ->
 		parent = @range.parentElement()
 		@commonAncestorContainer = parent
+		@collapsed = @compareBoundaryPoints('StartToEnd', @range) == 0
 
 		temp = @range.duplicate()
 		temp.moveToElementText(parent)
@@ -51,16 +61,36 @@ class Range
 
 	setStart: (node, offset) ->
 		if @getText(node).length >= offset && offset >= 0
-			temp = document.body.createTextRange()
+			temp = @range.duplicate()
 			if node.nodeType == 3
 				temp.moveToElementText(node.parentNode)
 				temp.moveStart('character', offset)
+			if @compareBoundaryPoints('StartToEnd', temp) == -1
+				@range.setEndPoint('EndToStart', temp)
 			@range.setEndPoint('StartToStart', temp)
+			#if @collapsed then @collapse(false)
+			#@init()
 
 	setEnd: (node, offset) ->
 		if @getText(node).length >= offset && offset >= 0
-			temp = document.body.createTextRange()
+			temp = @range.duplicate()
 			if node.nodeType == 3
 				temp.moveToElementText(node.parentNode)
-				temp.moveStart('character', offset)
+				temp.moveEnd('character', offset)
 			@range.setEndPoint('EndToStart', temp)
+			#@init()
+
+	selectNodeContents: (node) ->
+		@range.moveToElementText(node)
+
+	collapse: (toStart) ->
+		if toStart
+			@range.setEndPoint('EndToStart', @range)
+		else
+			@range.setEndPoint('StartToEnd', @range)
+
+	compareBoundaryPoints: (how, source) ->
+		@range.compareEndPoints(how, source)
+
+	toString: ->
+		@range.text || ''

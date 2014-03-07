@@ -1,24 +1,43 @@
-(function(window, document) {if (window.getSelection || !document.selection) {
+(function(window, document) {var selection;
+
+if (window.getSelection || !document.selection) {
   return;
 }
 
+selection = null;
+
 window.getSelection = function() {
-  return new Selection;
+  return selection != null ? selection : selection = new Selection;
 };
 
 document.createRange = function() {
   return new Range;
 };
 
+document.attachEvent('onselectionchange', function() {
+  return window.getSelection().setRangeAt(0, new Range(true));
+});
+
 var Range;
 
 Range = (function() {
-  function Range(selection) {
+  Range.history = [];
+
+  function Range(isSelection) {
+    if (isSelection) {
+      this.range = document.selection.createRange();
+    } else {
+      this.range = document.body.createTextRange();
+      this.collapse(true);
+    }
+    this.init();
+  }
+
+  Range.prototype.init = function() {
     var flag, parent, result, startToEnd, startToStart, temp;
-    this.selection = selection;
-    this.range = this.selection.createRange();
     parent = this.range.parentElement();
     this.commonAncestorContainer = parent;
+    this.collapsed = this.compareBoundaryPoints('StartToEnd', this.range) === 0;
     temp = this.range.duplicate();
     temp.moveToElementText(parent);
     flag = this.range.text.length > 0 ? 0 : 1;
@@ -31,8 +50,8 @@ Range = (function() {
     startToEnd = this.stripLineBreaks(temp.text);
     result = this.findNodeByPos(parent, startToEnd.length, 1);
     this.endContainer = result.el;
-    this.endOffset = result.offset;
-  }
+    return this.endOffset = result.offset;
+  };
 
   Range.prototype.select = function() {
     return this.range.select();
@@ -84,10 +103,13 @@ Range = (function() {
   Range.prototype.setStart = function(node, offset) {
     var temp;
     if (this.getText(node).length >= offset && offset >= 0) {
-      temp = document.body.createTextRange();
+      temp = this.range.duplicate();
       if (node.nodeType === 3) {
         temp.moveToElementText(node.parentNode);
         temp.moveStart('character', offset);
+      }
+      if (this.compareBoundaryPoints('StartToEnd', temp) === -1) {
+        this.range.setEndPoint('EndToStart', temp);
       }
       return this.range.setEndPoint('StartToStart', temp);
     }
@@ -96,13 +118,33 @@ Range = (function() {
   Range.prototype.setEnd = function(node, offset) {
     var temp;
     if (this.getText(node).length >= offset && offset >= 0) {
-      temp = document.body.createTextRange();
+      temp = this.range.duplicate();
       if (node.nodeType === 3) {
         temp.moveToElementText(node.parentNode);
-        temp.moveStart('character', offset);
+        temp.moveEnd('character', offset);
       }
       return this.range.setEndPoint('EndToStart', temp);
     }
+  };
+
+  Range.prototype.selectNodeContents = function(node) {
+    return this.range.moveToElementText(node);
+  };
+
+  Range.prototype.collapse = function(toStart) {
+    if (toStart) {
+      return this.range.setEndPoint('EndToStart', this.range);
+    } else {
+      return this.range.setEndPoint('StartToEnd', this.range);
+    }
+  };
+
+  Range.prototype.compareBoundaryPoints = function(how, source) {
+    return this.range.compareEndPoints(how, source);
+  };
+
+  Range.prototype.toString = function() {
+    return this.range.text || '';
   };
 
   return Range;
@@ -114,7 +156,7 @@ var Selection;
 Selection = (function() {
   function Selection() {
     this.selection = document.selection;
-    this.ranges = [new Range(this.selection)];
+    this.ranges = [];
     this.init();
   }
 
@@ -129,6 +171,11 @@ Selection = (function() {
     return this.ranges[index];
   };
 
+  Selection.prototype.setRangeAt = function(index, r) {
+    this.ranges[index] = r;
+    return this.init();
+  };
+
   Selection.prototype.removeAllRanges = function() {
     this.ranges = [];
     return this.init();
@@ -137,6 +184,7 @@ Selection = (function() {
   Selection.prototype.addRange = function(r) {
     var range, _i, _len, _ref, _results;
     this.ranges.push(r);
+    this.init();
     _ref = this.ranges;
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
