@@ -121,7 +121,10 @@ Range = (function() {
       temp = this.range.duplicate();
       if (node.nodeType === 3) {
         temp.moveToElementText(node.parentNode);
-        temp.moveEnd('character', offset);
+        temp.moveStart('character', offset);
+      }
+      if (this.compareBoundaryPoints('EndToStart', temp) === 1) {
+        this.range.setEndPoint('StartToStart', temp);
       }
       return this.range.setEndPoint('EndToStart', temp);
     }

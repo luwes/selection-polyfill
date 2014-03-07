@@ -7,7 +7,8 @@ class Range
 			@range = document.selection.createRange()
 		else
 			@range = document.body.createTextRange()
-			@collapse(true)
+			#Range(w3c) starts with both boundaries at start of document
+			@collapse(true) 
 
 		@init()
 
@@ -68,17 +69,16 @@ class Range
 			if @compareBoundaryPoints('StartToEnd', temp) == -1
 				@range.setEndPoint('EndToStart', temp)
 			@range.setEndPoint('StartToStart', temp)
-			#if @collapsed then @collapse(false)
-			#@init()
 
 	setEnd: (node, offset) ->
 		if @getText(node).length >= offset && offset >= 0
 			temp = @range.duplicate()
 			if node.nodeType == 3
 				temp.moveToElementText(node.parentNode)
-				temp.moveEnd('character', offset)
+				temp.moveStart('character', offset)
+			if @compareBoundaryPoints('EndToStart', temp) == 1
+				@range.setEndPoint('StartToStart', temp)
 			@range.setEndPoint('EndToStart', temp)
-			#@init()
 
 	selectNodeContents: (node) ->
 		@range.moveToElementText(node)

@@ -10,4 +10,5 @@ document.createRange = ->
 	new Range
 
 document.attachEvent 'onselectionchange', ->
+	#when selection changes set a new Range at index 0
 	window.getSelection().setRangeAt(0, new Range(true))

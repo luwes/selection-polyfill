@@ -29,9 +29,9 @@
 
 			$('#text').on('mouseup', function() {
 				if (selection.rangeCount > 0) {
-					var range = selection.getRangeAt(0);
-					range.setStart($('#start')[0].childNodes[0], 1);
-					//range.setEnd($('#end')[0].childNodes[0], 3);
+					var range = document.createRange();
+					//range.setStart($('#start')[0].childNodes[0], 1);
+					range.setEnd($('#end')[0].childNodes[0], 3);
 					selection.removeAllRanges();
 					selection.addRange(range);
 				}
