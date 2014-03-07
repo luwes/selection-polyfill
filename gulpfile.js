@@ -18,10 +18,10 @@ var wrapTemplate =
 gulp.task('scripts', function() {
 	gulp.src(paths.scripts)
 		.pipe(coffee({ bare: true }))
-		.pipe(concat('selection-shiv.js'))
+		.pipe(concat('selection-polyfill.js'))
 		.pipe(wrap(wrapTemplate))
 		.pipe(gulp.dest(''))
-		.pipe(rename('selection-shiv.min.js'))
+		.pipe(rename('selection-polyfill.min.js'))
 		.pipe(uglify())
 		.pipe(gulp.dest(''));
 });
