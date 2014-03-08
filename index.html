@@ -25,6 +25,7 @@
 			$('#text').on('mouseup', function() {
 				if (selection.rangeCount > 0) {
 					console.log(selection.isCollapsed)
+					selection.deleteFromDocument();
 
 					//var range = document.createRange();
 					//range.setStart($('#start')[0].childNodes[0], 1);

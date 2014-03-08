@@ -218,6 +218,10 @@ Selection = (function() {
     return _results;
   };
 
+  Selection.prototype.deleteFromDocument = function() {
+    return this.selection.clear();
+  };
+
   return Selection;
 
 })();
