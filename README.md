@@ -7,6 +7,10 @@ Implements the following (so far)
 - document.createRange()
 - Selection (Class) ----
 - selection.rangeCount
+- selection.anchorNode
+- selection.anchorOffset
+- selection.focusNode
+- selection.focusOffset
 - selection.getRangeAt(index)
 - selection.removeAllRanges()
 - selection.addRange(range)
