@@ -15,6 +15,7 @@ Implements the following (so far)
 - selection.removeAllRanges()
 - selection.addRange(range)
 - selection.deleteFromDocument()
+- selection.toString()
 - Range (Class) ----
 - range.commonAncestorContainer
 - range.collapsed

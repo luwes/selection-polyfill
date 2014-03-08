@@ -14,6 +14,10 @@ document.createRange = function() {
   return new Range;
 };
 
+document.attachEvent('onkeydown', function() {
+  return window.getSelection().setRangeAt(0, new Range(true));
+});
+
 document.attachEvent('onselectionchange', function() {
   return window.getSelection().setRangeAt(0, new Range(true));
 });
@@ -74,7 +78,7 @@ Range = (function() {
     }
     obj = {
       length: 0,
-      el: 0,
+      el: parent,
       offset: 0
     };
     (fn = function(parent, pos, end, obj) {

@@ -46,7 +46,7 @@ class Range
 		str.replace(/\r\n/g, '')
 
 	findNodeByPos: (parent, pos, end=0) ->
-		obj = { length: 0, el: 0, offset: 0 }
+		obj = { length: 0, el: parent, offset: 0 }
 		do fn = (parent, pos, end, obj) ->
 			for node in parent.childNodes when !obj.found
 				if node.nodeType == 3
