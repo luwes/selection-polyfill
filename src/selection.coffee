@@ -16,11 +16,12 @@ class Selection
 				[anchor, focus] = ['end', 'start']
 			else
 				[anchor, focus] = ['start', 'end']
-				
+			
 			@anchorNode = current["#{anchor}Container"]
 			@anchorOffset = current["#{anchor}Offset"]
 			@focusNode = current["#{focus}Container"]
 			@focusOffset = current["#{focus}Offset"]
+			@isCollapsed = @anchorNode == @focusNode
 
 	getRangeAt: (index) ->
 		@ranges[index]

@@ -185,7 +185,8 @@ Selection = (function() {
       this.anchorNode = current["" + anchor + "Container"];
       this.anchorOffset = current["" + anchor + "Offset"];
       this.focusNode = current["" + focus + "Container"];
-      return this.focusOffset = current["" + focus + "Offset"];
+      this.focusOffset = current["" + focus + "Offset"];
+      return this.isCollapsed = this.anchorNode === this.focusNode;
     }
   };
 
