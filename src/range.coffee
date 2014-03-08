@@ -18,7 +18,7 @@ class Range
 	init: ->
 		parent = @range.parentElement()
 		@commonAncestorContainer = parent
-		@collapsed = @compareBoundaryPoints('StartToEnd', @range) == 0
+		@collapsed = @compareBoundaryPoints('StartToEnd', @) == 0
 
 		temp = @range.duplicate()
 		temp.moveToElementText(parent)
@@ -69,7 +69,7 @@ class Range
 			if node.nodeType == 3
 				temp.moveToElementText(node.parentNode)
 				temp.moveStart('character', offset)
-			if @compareBoundaryPoints('StartToEnd', temp) == -1
+			if @range.compareEndPoints('StartToEnd', temp) == -1
 				@range.setEndPoint('EndToStart', temp)
 			@range.setEndPoint('StartToStart', temp)
 
@@ -79,7 +79,7 @@ class Range
 			if node.nodeType == 3
 				temp.moveToElementText(node.parentNode)
 				temp.moveStart('character', offset)
-			if @compareBoundaryPoints('EndToStart', temp) == 1
+			if @range.compareEndPoints('EndToStart', temp) == 1
 				@range.setEndPoint('StartToStart', temp)
 			@range.setEndPoint('EndToStart', temp)
 
@@ -93,7 +93,7 @@ class Range
 			@range.setEndPoint('StartToEnd', @range)
 
 	compareBoundaryPoints: (how, source) ->
-		@range.compareEndPoints(how, source)
+		@range.compareEndPoints(how, source.range)
 
 	toString: ->
 		@range.text || ''
