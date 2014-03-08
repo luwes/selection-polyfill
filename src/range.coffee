@@ -1,7 +1,5 @@
 
 class Range
-	@history: []
-
 	constructor: (isSelection) ->
 		if isSelection
 			@range = document.selection.createRange()
