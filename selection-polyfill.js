@@ -21,7 +21,13 @@ document.attachEvent('onselectionchange', function() {
 var Range;
 
 Range = (function() {
-  Range.history = [];
+  Range.END_TO_END = 'EndToEnd';
+
+  Range.END_TO_START = 'EndToStart';
+
+  Range.START_TO_END = 'StartToEnd';
+
+  Range.START_TO_START = 'StartToStart';
 
   function Range(isSelection) {
     if (isSelection) {
@@ -37,7 +43,7 @@ Range = (function() {
     var flag, parent, result, startToEnd, startToStart, temp;
     parent = this.range.parentElement();
     this.commonAncestorContainer = parent;
-    this.collapsed = this.compareBoundaryPoints('StartToEnd', this.range) === 0;
+    this.collapsed = this.compareBoundaryPoints('StartToEnd', this) === 0;
     temp = this.range.duplicate();
     temp.moveToElementText(parent);
     flag = this.range.text.length > 0 ? 0 : 1;
@@ -108,7 +114,7 @@ Range = (function() {
         temp.moveToElementText(node.parentNode);
         temp.moveStart('character', offset);
       }
-      if (this.compareBoundaryPoints('StartToEnd', temp) === -1) {
+      if (this.range.compareEndPoints('StartToEnd', temp) === -1) {
         this.range.setEndPoint('EndToStart', temp);
       }
       return this.range.setEndPoint('StartToStart', temp);
@@ -123,7 +129,7 @@ Range = (function() {
         temp.moveToElementText(node.parentNode);
         temp.moveStart('character', offset);
       }
-      if (this.compareBoundaryPoints('EndToStart', temp) === 1) {
+      if (this.range.compareEndPoints('EndToStart', temp) === 1) {
         this.range.setEndPoint('StartToStart', temp);
       }
       return this.range.setEndPoint('EndToStart', temp);
@@ -143,7 +149,7 @@ Range = (function() {
   };
 
   Range.prototype.compareBoundaryPoints = function(how, source) {
-    return this.range.compareEndPoints(how, source);
+    return this.range.compareEndPoints(how, source.range);
   };
 
   Range.prototype.toString = function() {
@@ -164,10 +170,23 @@ Selection = (function() {
   }
 
   Selection.prototype.init = function() {
-    var _ref, _ref1;
+    var anchor, current, focus, _ref, _ref1;
     this.rangeCount = this.ranges.length;
-    this.anchorNode = (_ref = this.ranges[0]) != null ? _ref.startContainer : void 0;
-    return this.anchorOffset = (_ref1 = this.ranges[0]) != null ? _ref1.startOffset : void 0;
+    if (this.rangeCount) {
+      current = this.ranges[0];
+      if (this.prev == null) {
+        this.prev = current;
+      }
+      if (current.compareBoundaryPoints(Range.END_TO_END, this.prev) === 0) {
+        _ref = ['end', 'start'], anchor = _ref[0], focus = _ref[1];
+      } else {
+        _ref1 = ['start', 'end'], anchor = _ref1[0], focus = _ref1[1];
+      }
+      this.anchorNode = current["" + anchor + "Container"];
+      this.anchorOffset = current["" + anchor + "Offset"];
+      this.focusNode = current["" + focus + "Container"];
+      return this.focusOffset = current["" + focus + "Offset"];
+    }
   };
 
   Selection.prototype.getRangeAt = function(index) {
@@ -175,6 +194,7 @@ Selection = (function() {
   };
 
   Selection.prototype.setRangeAt = function(index, r) {
+    this.prev = this.ranges[index];
     this.ranges[index] = r;
     return this.init();
   };

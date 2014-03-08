@@ -22,15 +22,15 @@
 
 			var selection = window.getSelection();
 
-			$('#text').on('mouseup', function() {
-				if (selection.rangeCount > 0) {
-					var range = document.createRange();
-					//range.setStart($('#start')[0].childNodes[0], 1);
-					range.setEnd($('#end')[0].childNodes[0], 3);
-					selection.removeAllRanges();
-					selection.addRange(range);
-				}
-			});
+			// $('#text').on('mouseup', function() {
+			// 	if (selection.rangeCount > 0) {
+			// 		var range = document.createRange();
+			// 		//range.setStart($('#start')[0].childNodes[0], 1);
+			// 		range.setEnd($('#end')[0].childNodes[0], 3);
+			// 		selection.removeAllRanges();
+			// 		selection.addRange(range);
+			// 	}
+			// });
 
 			$(document).on('mouseup', function() {
 				if (selection.rangeCount > 0) {
@@ -39,11 +39,14 @@
 					output = [
 						'<br/>rangeCount: ',
 						selection.rangeCount,
+
+						'<br/>anchorNode: ',
+						selection.anchorNode.data,
 						'<br/>anchorOffset: ',
 						selection.anchorOffset,
 
 						'<br/>commonAncestorContainer: ',
-						ancestor.tagType == 3 ? 'TEXT' : ancestor.tagName,
+						ancestor.nodeType == 3 ? 'TEXT' : ancestor.tagName,
 
 						'<br/>startContainer: ',
 						range.startContainer.data,
