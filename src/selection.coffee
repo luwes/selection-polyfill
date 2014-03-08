@@ -44,3 +44,6 @@ class Selection
 
 	deleteFromDocument: ->
 		@selection.clear()
+
+	toString: ->
+		@ranges[0].toString()

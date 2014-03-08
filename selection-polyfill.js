@@ -222,6 +222,10 @@ Selection = (function() {
     return this.selection.clear();
   };
 
+  Selection.prototype.toString = function() {
+    return this.ranges[0].toString();
+  };
+
   return Selection;
 
 })();
