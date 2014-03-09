@@ -156,6 +156,14 @@ Range = (function() {
     return this.range.compareEndPoints(how, source.range);
   };
 
+  Range.prototype.cloneRange = function() {
+    var clone;
+    clone = new Range;
+    clone.range = this.range.duplicate();
+    clone.init();
+    return clone;
+  };
+
   Range.prototype.toString = function() {
     return this.range.text || '';
   };

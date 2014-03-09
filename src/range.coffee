@@ -95,5 +95,11 @@ class Range
 	compareBoundaryPoints: (how, source) ->
 		@range.compareEndPoints(how, source.range)
 
+	cloneRange: ->
+		clone = new Range
+		clone.range = @range.duplicate()
+		clone.init()
+		clone
+
 	toString: ->
 		@range.text || ''
