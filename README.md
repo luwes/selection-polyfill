@@ -5,6 +5,8 @@ Implements the following (so far)
 
 - window.getSelection()
 - document.createRange()
+- input.selectionStart
+- input.selectionEnd
 - Selection (Class) ----
 - selection.rangeCount
 - selection.anchorNode
@@ -28,6 +30,9 @@ Implements the following (so far)
 - range.selectNodeContents(node)
 - range.collapse(toStart)
 - range.compareBoundaryPoints(how, range)
+- range.getBoundingClientRect()
+- range.cloneRange()
+- range.detach()
 - range.toString()
 
 https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#selections
