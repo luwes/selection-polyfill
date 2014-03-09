@@ -64,12 +64,13 @@ window.Range = (function() {
   };
 
   Range.prototype.setStart = function(node, offset) {
-    var temp;
+    var nodePos, temp;
     if (_.getText(node).length >= offset && offset >= 0) {
+      temp = this.range.duplicate();
       if (node.nodeType === 3) {
-        temp = this.range.duplicate();
+        nodePos = _.findPosFromNode(node);
         temp.moveToElementText(node.parentNode);
-        temp.moveStart('character', offset);
+        temp.moveStart('character', nodePos + offset);
       }
       if (this.range.compareEndPoints('StartToEnd', temp) === -1) {
         this.range.setEndPoint('EndToStart', temp);
@@ -79,15 +80,13 @@ window.Range = (function() {
   };
 
   Range.prototype.setEnd = function(node, offset) {
-    var temp;
+    var nodePos, temp;
     if (_.getText(node).length >= offset && offset >= 0) {
+      temp = this.range.duplicate();
       if (node.nodeType === 3) {
-        temp = this.range.duplicate();
+        nodePos = _.findPosFromNode(node);
         temp.moveToElementText(node.parentNode);
-        temp.moveStart('character', offset);
-      }
-      if (this.range.compareEndPoints('EndToStart', temp) === 1) {
-        this.range.setEndPoint('StartToStart', temp);
+        temp.moveStart('character', nodePos + offset);
       }
       return this.range.setEndPoint('EndToStart', temp);
     }
@@ -266,6 +265,35 @@ _ = {
       return _results;
     })(parent, pos, end, obj);
     return obj;
+  },
+  findPosFromNode: function(n) {
+    var fn, obj, parent;
+    obj = {
+      pos: 0
+    };
+    parent = n.parentNode;
+    (fn = function(parent, n, obj) {
+      var node, _i, _len, _ref, _results;
+      _ref = parent.childNodes;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        node = _ref[_i];
+        if (!obj.found) {
+          if (node === n) {
+            obj.found = true;
+            break;
+          } else if (node.nodeType === 3) {
+            _results.push(obj.pos += node.length);
+          } else if (node.hasChildNodes()) {
+            _results.push(fn(node, n, obj));
+          } else {
+            _results.push(void 0);
+          }
+        }
+      }
+      return _results;
+    })(parent, n, obj);
+    return obj.pos;
   }
 };
 })(window, document);

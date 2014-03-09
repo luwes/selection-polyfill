@@ -42,24 +42,22 @@ class window.Range
 
 	setStart: (node, offset) ->
 		if _.getText(node).length >= offset && offset >= 0
+			temp = @range.duplicate()
 			if node.nodeType == 3
-				temp = @range.duplicate()
+				nodePos = _.findPosFromNode(node)
 				temp.moveToElementText(node.parentNode)
-				temp.moveStart('character', offset)
-
+				temp.moveStart('character', nodePos + offset)
 			if @range.compareEndPoints('StartToEnd', temp) == -1
 				@range.setEndPoint('EndToStart', temp)
 			@range.setEndPoint('StartToStart', temp)
 
 	setEnd: (node, offset) ->
 		if _.getText(node).length >= offset && offset >= 0
+			temp = @range.duplicate()
 			if node.nodeType == 3
-				temp = @range.duplicate()
+				nodePos = _.findPosFromNode(node)
 				temp.moveToElementText(node.parentNode)
-				temp.moveStart('character', offset)
-
-			if @range.compareEndPoints('EndToStart', temp) == 1
-				@range.setEndPoint('StartToStart', temp)
+				temp.moveStart('character', nodePos + offset)
 			@range.setEndPoint('EndToStart', temp)
 
 	selectNodeContents: (node) ->

@@ -29,3 +29,17 @@ _ =
 				else
 					fn(node, pos, end, obj)
 		return obj
+
+	findPosFromNode: (n) ->
+		obj = { pos: 0 }
+		parent = n.parentNode
+		do fn = (parent, n, obj) ->
+			for node in parent.childNodes when !obj.found
+				if node == n
+					obj.found = true
+					break
+				else if node.nodeType == 3
+					obj.pos += node.length
+				else if node.hasChildNodes()
+					fn(node, n, obj)
+		return obj.pos
