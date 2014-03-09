@@ -49,14 +49,12 @@ window.Range = (function() {
     temp = this.range.duplicate();
     temp.moveToElementText(parent);
     flag = this.range.text.length > 0 ? 0 : 1;
-    temp.setEndPoint('EndToStart', this.range);
-    startToStart = _.stripLineBreaks(temp.text);
-    result = _.findNodeByPos(parent, startToStart.length, flag);
+    startToStart = _.findLength('StartToStart', temp, this.range);
+    result = _.findNodeByPos(parent, startToStart, flag);
     this.startContainer = result.el;
     this.startOffset = result.offset;
-    temp.setEndPoint('EndToEnd', this.range);
-    startToEnd = _.stripLineBreaks(temp.text);
-    result = _.findNodeByPos(parent, startToEnd.length, 1);
+    startToEnd = _.findLength('StartToEnd', temp, this.range);
+    result = _.findNodeByPos(parent, startToEnd, 1);
     this.endContainer = result.el;
     return this.endOffset = result.offset;
   };
@@ -222,6 +220,18 @@ _ = {
   },
   getText: function(el) {
     return el.innerText || el.nodeValue;
+  },
+  findLength: function(how, r1, r2) {
+    var temp;
+    temp = r1.duplicate();
+    switch (how) {
+      case 'StartToStart':
+        temp.setEndPoint('EndToStart', r2);
+        break;
+      case 'StartToEnd':
+        temp.setEndPoint('EndToEnd', r2);
+    }
+    return _.stripLineBreaks(temp.text).length;
   },
   findNodeByPos: function(parent, pos, end) {
     var fn, obj;

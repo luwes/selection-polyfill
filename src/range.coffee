@@ -27,15 +27,13 @@ class window.Range
 		# element when the cursor is right on a boundary
 		flag = if @range.text.length > 0 then 0 else 1
 
-		temp.setEndPoint('EndToStart', @range)
-		startToStart = _.stripLineBreaks(temp.text)
-		result = _.findNodeByPos(parent, startToStart.length, flag)
+		startToStart = _.findLength('StartToStart', temp, @range)
+		result = _.findNodeByPos(parent, startToStart, flag)
 		@startContainer = result.el
 		@startOffset = result.offset
 
-		temp.setEndPoint('EndToEnd', @range)
-		startToEnd = _.stripLineBreaks(temp.text)
-		result = _.findNodeByPos(parent, startToEnd.length, 1)
+		startToEnd = _.findLength('StartToEnd', temp, @range)
+		result = _.findNodeByPos(parent, startToEnd, 1)
 		@endContainer = result.el
 		@endOffset = result.offset
 

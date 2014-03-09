@@ -6,6 +6,15 @@ _ =
 	getText: (el) ->
 		el.innerText || el.nodeValue
 
+	findLength: (how, r1, r2) ->
+		temp = r1.duplicate()	
+		switch how
+			when 'StartToStart'
+				temp.setEndPoint('EndToStart', r2)
+			when 'StartToEnd'
+				temp.setEndPoint('EndToEnd', r2)
+		_.stripLineBreaks(temp.text).length
+
 	findNodeByPos: (parent, pos, end=0) ->
 		obj = { length: 0, el: parent, offset: 0 }
 		do fn = (parent, pos, end, obj) ->
@@ -20,4 +29,3 @@ _ =
 				else
 					fn(node, pos, end, obj)
 		return obj
-		
