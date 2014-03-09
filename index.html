@@ -8,9 +8,9 @@
 
 		<div id="text" contenteditable="true">
 			<p>Select <b>Bold</b></p>
-			<p id="start">Para <b>Strong</b></p>
+			<p id="start">Hello, some <b>bold</b> and <i>italic</i></p>
 			<p>Para <b>Strong</b></p>
-			<p id="end">Para <b>Strong</b></p>
+			<p id="end">Hello, some <b>bold</b> and <i>italic</i> and <b><i>bold</i></b> text</p>
 		</div>
 		<br/>
 		<div id="output"></div>
@@ -24,14 +24,14 @@
 
 			$('#text').on('mouseup', function() {
 				if (selection.rangeCount > 0) {
-					console.log(selection.isCollapsed)
-					console.log(selection.toString())
+					//console.log(selection.isCollapsed)
+					//console.log(selection.toString())
 					//selection.deleteFromDocument();
-					//var range = document.createRange();
-					//range.setStart($('#start')[0].childNodes[0], 1);
-					//range.setEnd($('#end')[0].childNodes[0], 3);
-					//selection.removeAllRanges();
-					//selection.addRange(range);
+					var range = document.createRange();
+					range.setStart($('#start')[0].childNodes[2], 3);
+					range.setEnd($('#end')[0].childNodes[2], 2);
+					selection.removeAllRanges();
+					selection.addRange(range);
 				}
 			});
 

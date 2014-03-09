@@ -23,7 +23,8 @@ gulp.task('scripts', function() {
 		.pipe(gulp.dest(''))
 		.pipe(rename('selection-polyfill.min.js'))
 		.pipe(uglify())
-		.pipe(gulp.dest(''));
+		.pipe(gulp.dest(''))
+		.pipe(gulp.dest('../caret.js/src/'))
 });
 
 gulp.task('watch', function() {
