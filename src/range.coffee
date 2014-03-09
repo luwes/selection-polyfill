@@ -1,5 +1,5 @@
 
-class Range
+class window.Range
 	@END_TO_END: 'EndToEnd'
 	@END_TO_START: 'EndToStart'
 	@START_TO_END: 'StartToEnd'

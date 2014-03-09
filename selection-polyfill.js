@@ -22,9 +22,7 @@ document.attachEvent('onselectionchange', function() {
   return window.getSelection().setRangeAt(0, new Range(true));
 });
 
-var Range;
-
-Range = (function() {
+window.Range = (function() {
   Range.END_TO_END = 'EndToEnd';
 
   Range.END_TO_START = 'EndToStart';
