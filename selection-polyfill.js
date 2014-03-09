@@ -164,6 +164,10 @@ Range = (function() {
     return clone;
   };
 
+  Range.prototype.detach = function() {
+    return delete this.range;
+  };
+
   Range.prototype.toString = function() {
     return this.range.text || '';
   };

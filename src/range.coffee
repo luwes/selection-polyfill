@@ -101,5 +101,8 @@ class Range
 		clone.init()
 		clone
 
+	detach: ->
+		delete @range
+
 	toString: ->
 		@range.text || ''
