@@ -66,6 +66,7 @@ class Range
 	setStart: (node, offset) ->
 		if @getText(node).length >= offset && offset >= 0
 			temp = @range.duplicate()
+			console.log(node.data)
 			if node.nodeType == 3
 				temp.moveToElementText(node.parentNode)
 				temp.moveStart('character', offset)
@@ -103,6 +104,16 @@ class Range
 
 	detach: ->
 		delete @range
+
+	getBoundingClientRect: ->
+		rect = @range.getBoundingClientRect()
+		obj =
+			width: rect.right - rect.left
+			height: rect.bottom - rect.top
+			left: rect.left
+			right: rect.right
+			bottom: rect.bottom
+			top: rect.top
 
 	toString: ->
 		@range.text || ''
