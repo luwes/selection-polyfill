@@ -52,13 +52,13 @@ Range = (function() {
     temp.moveToElementText(parent);
     flag = this.range.text.length > 0 ? 0 : 1;
     temp.setEndPoint('EndToStart', this.range);
-    startToStart = this.stripLineBreaks(temp.text);
-    result = this.findNodeByPos(parent, startToStart.length, flag);
+    startToStart = _.stripLineBreaks(temp.text);
+    result = _.findNodeByPos(parent, startToStart.length, flag);
     this.startContainer = result.el;
     this.startOffset = result.offset;
     temp.setEndPoint('EndToEnd', this.range);
-    startToEnd = this.stripLineBreaks(temp.text);
-    result = this.findNodeByPos(parent, startToEnd.length, 1);
+    startToEnd = _.stripLineBreaks(temp.text);
+    result = _.findNodeByPos(parent, startToEnd.length, 1);
     this.endContainer = result.el;
     return this.endOffset = result.offset;
   };
@@ -67,55 +67,11 @@ Range = (function() {
     return this.range.select();
   };
 
-  Range.prototype.stripLineBreaks = function(str) {
-    return str.replace(/\r\n/g, '');
-  };
-
-  Range.prototype.findNodeByPos = function(parent, pos, end) {
-    var fn, obj;
-    if (end == null) {
-      end = 0;
-    }
-    obj = {
-      length: 0,
-      el: parent,
-      offset: 0
-    };
-    (fn = function(parent, pos, end, obj) {
-      var node, _i, _len, _ref, _results;
-      _ref = parent.childNodes;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        node = _ref[_i];
-        if (!obj.found) {
-          if (node.nodeType === 3) {
-            if (obj.length + node.length + end > pos) {
-              obj.found = true;
-              obj.el = node;
-              obj.offset = pos - obj.length;
-              break;
-            }
-            _results.push(obj.length += node.length);
-          } else {
-            _results.push(fn(node, pos, end, obj));
-          }
-        }
-      }
-      return _results;
-    })(parent, pos, end, obj);
-    return obj;
-  };
-
-  Range.prototype.getText = function(el) {
-    return el.innerText || el.nodeValue;
-  };
-
   Range.prototype.setStart = function(node, offset) {
     var temp;
-    if (this.getText(node).length >= offset && offset >= 0) {
-      temp = this.range.duplicate();
-      console.log(node.data);
+    if (_.getText(node).length >= offset && offset >= 0) {
       if (node.nodeType === 3) {
+        temp = this.range.duplicate();
         temp.moveToElementText(node.parentNode);
         temp.moveStart('character', offset);
       }
@@ -128,9 +84,9 @@ Range = (function() {
 
   Range.prototype.setEnd = function(node, offset) {
     var temp;
-    if (this.getText(node).length >= offset && offset >= 0) {
-      temp = this.range.duplicate();
+    if (_.getText(node).length >= offset && offset >= 0) {
       if (node.nodeType === 3) {
+        temp = this.range.duplicate();
         temp.moveToElementText(node.parentNode);
         temp.moveStart('character', offset);
       }
@@ -259,4 +215,49 @@ Selection = (function() {
   return Selection;
 
 })();
+
+var _;
+
+_ = {
+  stripLineBreaks: function(str) {
+    return str.replace(/\r\n/g, '');
+  },
+  getText: function(el) {
+    return el.innerText || el.nodeValue;
+  },
+  findNodeByPos: function(parent, pos, end) {
+    var fn, obj;
+    if (end == null) {
+      end = 0;
+    }
+    obj = {
+      length: 0,
+      el: parent,
+      offset: 0
+    };
+    (fn = function(parent, pos, end, obj) {
+      var node, _i, _len, _ref, _results;
+      _ref = parent.childNodes;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        node = _ref[_i];
+        if (!obj.found) {
+          if (node.nodeType === 3) {
+            if (obj.length + node.length + end > pos) {
+              obj.found = true;
+              obj.el = node;
+              obj.offset = pos - obj.length;
+              break;
+            }
+            _results.push(obj.length += node.length);
+          } else {
+            _results.push(fn(node, pos, end, obj));
+          }
+        }
+      }
+      return _results;
+    })(parent, pos, end, obj);
+    return obj;
+  }
+};
 })(window, document);
