@@ -37,6 +37,9 @@ class window.Range
 		@endContainer = result.el
 		@endOffset = result.offset
 
+		@selectionStart = _.findLength('StartToStart', temp, @range, true)
+		@selectionEnd = _.findLength('StartToEnd', temp, @range, true)
+
 	select: ->
 		@range.select()
 

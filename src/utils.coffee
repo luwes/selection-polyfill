@@ -1,19 +1,25 @@
 
 _ =
+	convertLineBreaks: (str) ->
+		str.replace(/\r\n/g, '\n')
+
 	stripLineBreaks: (str) ->
 		str.replace(/\r\n/g, '')
 
 	getText: (el) ->
 		el.innerText || el.nodeValue
 
-	findLength: (how, r1, r2) ->
+	findLength: (how, r1, r2, raw) ->
 		temp = r1.duplicate()	
 		switch how
 			when 'StartToStart'
 				temp.setEndPoint('EndToStart', r2)
 			when 'StartToEnd'
 				temp.setEndPoint('EndToEnd', r2)
-		_.stripLineBreaks(temp.text).length
+		if raw
+			_.convertLineBreaks(temp.text).length
+		else
+			_.stripLineBreaks(temp.text).length
 
 	findNodeByPos: (parent, pos, end=0) ->
 		obj = { length: 0, el: parent, offset: 0 }

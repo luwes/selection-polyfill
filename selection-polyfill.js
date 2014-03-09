@@ -19,7 +19,14 @@ document.attachEvent('onkeydown', function() {
 });
 
 document.attachEvent('onselectionchange', function() {
-  return window.getSelection().setRangeAt(0, new Range(true));
+  var el, range;
+  window.getSelection().setRangeAt(0, new Range(true));
+  el = document.selection.createRange().parentElement();
+  if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+    range = window.getSelection().getRangeAt(0);
+    el.selectionStart = range.selectionStart;
+    return el.selectionEnd = range.selectionEnd;
+  }
 });
 
 window.Range = (function() {
@@ -56,7 +63,9 @@ window.Range = (function() {
     startToEnd = _.findLength('StartToEnd', temp, this.range);
     result = _.findNodeByPos(parent, startToEnd, 1);
     this.endContainer = result.el;
-    return this.endOffset = result.offset;
+    this.endOffset = result.offset;
+    this.selectionStart = _.findLength('StartToStart', temp, this.range, true);
+    return this.selectionEnd = _.findLength('StartToEnd', temp, this.range, true);
   };
 
   Range.prototype.select = function() {
@@ -214,13 +223,16 @@ Selection = (function() {
 var _;
 
 _ = {
+  convertLineBreaks: function(str) {
+    return str.replace(/\r\n/g, '\n');
+  },
   stripLineBreaks: function(str) {
     return str.replace(/\r\n/g, '');
   },
   getText: function(el) {
     return el.innerText || el.nodeValue;
   },
-  findLength: function(how, r1, r2) {
+  findLength: function(how, r1, r2, raw) {
     var temp;
     temp = r1.duplicate();
     switch (how) {
@@ -230,7 +242,11 @@ _ = {
       case 'StartToEnd':
         temp.setEndPoint('EndToEnd', r2);
     }
-    return _.stripLineBreaks(temp.text).length;
+    if (raw) {
+      return _.convertLineBreaks(temp.text).length;
+    } else {
+      return _.stripLineBreaks(temp.text).length;
+    }
   },
   findNodeByPos: function(parent, pos, end) {
     var fn, obj;

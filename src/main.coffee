@@ -16,3 +16,9 @@ document.attachEvent 'onkeydown', ->
 document.attachEvent 'onselectionchange', ->
 	#when selection changes set a new Range at index 0
 	window.getSelection().setRangeAt(0, new Range(true))
+
+	el = document.selection.createRange().parentElement()
+	if el.tagName == 'INPUT' || el.tagName == 'TEXTAREA'
+		range = window.getSelection().getRangeAt(0)
+		el.selectionStart = range.selectionStart
+		el.selectionEnd = range.selectionEnd
