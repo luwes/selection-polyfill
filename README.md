@@ -36,3 +36,6 @@ Implements the following (so far)
 - range.toString()
 
 https://dvcs.w3.org/hg/editing/raw-file/tip/editing.html#selections
+
+##License
+http://luwes.mit-license.org/

@@ -1,0 +1,25 @@
+{
+  "name": "selection-polyfill",
+  "version": "0.0.0",
+  "description": "Text selection polyfill for IE8",
+  "main": "selection-polyfill.js",
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "~3.5.5",
+    "gulp-uglify": "~0.2.1",
+    "gulp-coffee": "~1.4.1",
+    "gulp-rename": "~1.2.0",
+    "gulp-concat": "~2.1.7",
+    "gulp-wrap": "~0.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/luwes/selection-polyfill.git"
+  },
+  "author": "Wesley Luyten",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/luwes/selection-polyfill/issues"
+  },
+  "homepage": "https://github.com/luwes/selection-polyfill"
+}
