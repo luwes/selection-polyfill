@@ -6,7 +6,7 @@ if (window.getSelection || !document.selection) {
 
 selection = null;
 
-window.getSelection = function() {
+window.getSelection = document.getSelection = function() {
   return selection != null ? selection : selection = new Selection;
 };
 
