@@ -1,6 +1,6 @@
 {
   "name": "selection-polyfill",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Text selection polyfill for IE8",
   "main": "selection-polyfill.js",
   "dependencies": {},
