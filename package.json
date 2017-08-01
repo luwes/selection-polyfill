@@ -5,11 +5,11 @@
   "main": "selection-polyfill.js",
   "dependencies": {},
   "devDependencies": {
-    "gulp": "~3.5.5",
-    "gulp-uglify": "~0.2.1",
+    "gulp": "^3.9.1",
     "gulp-coffee": "~1.4.1",
-    "gulp-rename": "~1.2.0",
     "gulp-concat": "~2.1.7",
+    "gulp-rename": "~1.2.0",
+    "gulp-uglify": "~0.2.1",
     "gulp-wrap": "~0.3.0"
   },
   "repository": {
